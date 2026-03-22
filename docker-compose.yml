@@ -3,11 +3,11 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: laravel_app
     volumes:
-      - .:/var/www
+      - ./backend:/var/www
     ports:
       - "8000:8000"
     depends_on:
@@ -34,9 +34,9 @@ services:
   node:
     image: node:20
     container_name: laravel_node
-    working_dir: /var/www
+    working_dir: /app
     volumes:
-      - .:/var/www
+      - ./backend:/app
     command: sh -c "npm install && npm run dev"
     ports:
       - "5173:5173"

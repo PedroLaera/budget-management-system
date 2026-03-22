@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use Illuminate\Http\Request;
@@ -63,5 +64,15 @@ class BudgetController extends Controller
                 'error'   => $e->getMessage(),
             ], 500);
         }
+    }
+
+        public function index()
+    {
+        $budgets = Budget::with('produtos')->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $budgets,
+        ], 200);
     }
 }
