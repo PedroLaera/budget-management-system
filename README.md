@@ -37,22 +37,28 @@ Execução local sem Docker:
 
 _____________Backend:
 
-cd backend
+    cd backend
 
-composer install
+    composer install
 
-cp .env.example .env
+    cp .env.example .env
 
-php artisan key:generate
+    php artisan key:generate
 
-php artisan migrate:fresh --seed
+    php artisan migrate:fresh --seed
 
-php artisan serve
+    php artisan serve
 
 _____________Frontend:
 
-cd frontend
+    cd frontend
 
-npm install
+    npm install
 
-npm run dev
+    npm run dev
+
+Para efetuar os testes:
+
+    para o teste do Back - docker exec -it laravel_app php artisan test
+    
+    para o teste do Front  - cd frontend > npm test
