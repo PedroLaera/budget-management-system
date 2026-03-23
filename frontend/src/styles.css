@@ -1,0 +1,169 @@
+:root {
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.page {
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.card {
+    max-width: 980px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
+}
+
+h1 {
+    margin: 0 0 20px 0;
+}
+
+h2 {
+    margin: 0 0 16px 0;
+}
+
+.form {
+    display: grid;
+    gap: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: 1fr 140px auto;
+    gap: 12px;
+}
+
+.field {
+    display: grid;
+    gap: 6px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+input,
+select {
+    height: 38px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.box {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    display: grid;
+    gap: 14px;
+}
+
+.align-end {
+    display: flex;
+    align-items: end;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    padding: 10px 8px;
+    font-size: 14px;
+}
+
+tfoot td {
+    font-weight: 700;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-success {
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    height: 38px;
+    padding: 0 16px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.btn-success {
+    background: #059669;
+    color: #fff;
+}
+
+.btn-success:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.actions {
+    display: flex;
+    justify-content: end;
+}
+
+.alert {
+    margin: 0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+}
+
+.alert.error {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.alert.success {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+@media (max-width: 800px) {
+    .grid,
+    .item-grid {
+        grid-template-columns: 1fr;
+    }
+}

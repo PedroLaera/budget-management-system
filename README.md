@@ -1,20 +1,58 @@
 Projeto de teste: Budget Management System
-Como rodar:
+
+Estrutura:
+
+- `backend`: API Laravel e banco de dados
+- `frontend`: aplicação React (Vite)
+
+Como rodar com Docker:
+
+1. Criar arquivo de ambiente do backend:
+
+    cp backend/.env.example backend/.env
+
+2. Subir os containers:
+
+    docker compose up -d
+
+3. Gerar chave do Laravel:
+
+    docker compose exec app php artisan key:generate
+
+4. Rodar migrations e seed:
+   
+    docker compose exec app php artisan migrate:fresh --seed
+
+Acessos:
+
+- Backend (API): `http://localhost:8000`
+- Frontend (React): `http://localhost:5173`
+
+Rotas principais da API:
+
+- http://localhost:8000/api/products - produtos existentes
+- http://localhost:8000/api/budgets  - orçamentos depois de feitos
+
+Execução local sem Docker:
+
+_____________Backend:
+
+cd backend
+
+composer install
 
 cp .env.example .env
 
-    obs.: cria o arquivo de configuração local do projeto a partir do modelo (.env.example).
-    
 php artisan key:generate
 
-    obs.: gera a chave de segurança da aplicação (APP_KEY), necessária para criptografia e funcionamento do Laravel.
+php artisan migrate:fresh --seed
 
-docker compose up -d
+php artisan serve
 
-    obs.: suba os containers e aguarde alguns segundos antes do próximo comando.
+_____________Frontend:
 
-docker compose exec app php artisan migrate:fresh --seed
+cd frontend
 
-    obs.: cria as tabelas no banco e insere os produtos iniciais.
+npm install
 
-Acesse: http://localhost:8000
+npm run dev

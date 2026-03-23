@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = ['nome', 'valor'];
+
+    protected $casts = [
+        'valor' => 'decimal:2',
+    ];
 }

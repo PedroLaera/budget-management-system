@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-namespace App\Http\Controllers;
 
 use App\Models\Budget;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -14,65 +14,81 @@ class BudgetController extends Controller
     {
         try {
             $validated = $request->validate([
-                'nomeCliente'       => 'required|string|max:45',
-                'data'              => 'required|string|max:45',
-                'produtos'          => 'required|array|min:1',
-                'produtos.*.nome'   => 'required|string|max:45',
-                'produtos.*.valor'  => 'required|string|max:45',
+                'nome_cliente' => 'required|string|max:100',
+                'data_solicitacao' => 'required|date',
+                'itens' => 'required|array|min:1',
+                'itens.*.product_id' => 'required|integer|exists:products,id',
+                'itens.*.quantidade' => 'required|integer|min:1',
             ], [
-                'nomeCliente.required'      => 'O nome do cliente é obrigatório.',
-                'data.required'             => 'A data é obrigatória.',
-                'produtos.required'         => 'Adicione ao menos um produto.',
-                'produtos.min'              => 'Adicione ao menos um produto.',
-                'produtos.*.nome.required'  => 'O nome do produto é obrigatório.',
-                'produtos.*.valor.required' => 'O valor do produto é obrigatório.',
+                'nome_cliente.required' => 'O nome do cliente é obrigatório.',
+                'data_solicitacao.required' => 'A data da solicitação é obrigatória.',
+                'itens.required' => 'Adicione ao menos um item.',
+                'itens.min' => 'Adicione ao menos um item.',
+                'itens.*.product_id.required' => 'O produto é obrigatório.',
+                'itens.*.product_id.exists' => 'Produto inválido.',
+                'itens.*.quantidade.required' => 'A quantidade é obrigatória.',
+                'itens.*.quantidade.min' => 'A quantidade deve ser maior que zero.',
             ]);
 
             $budget = DB::transaction(function () use ($validated) {
+                $productIds = collect($validated['itens'])->pluck('product_id')->unique()->values();
+                $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
                 $budget = Budget::create([
-                    'nomeCliente' => $validated['nomeCliente'],
-                    'data'        => $validated['data'],
+                    'nome_cliente' => $validated['nome_cliente'],
+                    'data_solicitacao' => $validated['data_solicitacao'],
+                    'total' => 0,
                 ]);
 
-                foreach ($validated['produtos'] as $produto) {
-                    $budget->produtos()->create([
-                        'nome'  => $produto['nome'],
-                        'valor' => $produto['valor'],
+                $total = 0;
+
+                foreach ($validated['itens'] as $item) {
+                    $product = $products->get($item['product_id']);
+                    $valorUnitario = (float) $product->valor;
+                    $subtotal = $valorUnitario * (int) $item['quantidade'];
+
+                    $budget->itens()->create([
+                        'product_id' => $product->id,
+                        'quantidade' => $item['quantidade'],
+                        'valor_unitario' => $valorUnitario,
+                        'subtotal' => $subtotal,
                     ]);
+
+                    $total += $subtotal;
                 }
 
-                return $budget->load('produtos');
+                $budget->update(['total' => $total]);
+
+                return $budget->load('itens.product');
             });
 
             return response()->json([
                 'success' => true,
                 'message' => 'Orçamento criado com sucesso.',
-                'data'    => $budget,
+                'data' => $budget,
             ], 201);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Dados inválidos.',
-                'errors'  => $e->errors(),
+                'errors' => $e->errors(),
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao salvar orçamento.',
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
-        public function index()
+    public function index()
     {
-        $budgets = Budget::with('produtos')->get();
+        $budgets = Budget::with('itens.product')->orderByDesc('created_at')->get();
 
         return response()->json([
             'success' => true,
-            'data'    => $budgets,
+            'data' => $budgets,
         ], 200);
     }
 }
