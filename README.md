@@ -35,17 +35,24 @@ Rotas principais da API:
 
 Execução local sem Docker:
 
-Backend:
+_____________Backend:
 
 cd backend
+
 composer install
+
 cp .env.example .env
+
 php artisan key:generate
+
 php artisan migrate:fresh --seed
+
 php artisan serve
 
-Frontend:
+_____________Frontend:
 
 cd frontend
+
 npm install
+
 npm run dev
